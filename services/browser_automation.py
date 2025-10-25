@@ -8,7 +8,7 @@ def play_youtube_video(search_query: str):
     """
     with sync_playwright() as p:
         # Khởi chạy trình duyệt. Thay `headless=False` để thấy cửa sổ trình duyệt.
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         page = browser.new_page()
 
         try:

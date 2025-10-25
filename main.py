@@ -28,10 +28,13 @@ def main():
         # Ví dụ: app.quit()
 
     # Tạo và bắt đầu luồng cho tác vụ backend
+    print("Chuẩn bị khởi động luồng backend...")
     backend_thread = threading.Thread(target=browser_task)
     backend_thread.start()
+    print("Luồng backend đã được khởi động.")
 
     # Bắt đầu vòng lặp sự kiện của ứng dụng GUI
+    print("Bắt đầu vòng lặp sự kiện của GUI...")
     sys.exit(app.exec())
 
 if __name__ == "__main__":
