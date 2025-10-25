@@ -1,3 +1,4 @@
 PyQt6
 playwright
 openai-whisper
+google-generativeai

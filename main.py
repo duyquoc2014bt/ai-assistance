@@ -2,9 +2,10 @@ import sys
 from PyQt6.QtWidgets import QApplication
 from ui.overlay import OverlayWindow
 from services.browser_automation import play_youtube_video
-from services.command_parser import parse_command
+# from services.command_parser import parse_command # Đã lỗi thời
 from services.bluetooth_manager import connect_to_nearest_speaker
 from services.voice_module import listen_for_command
+from services.ai_core import get_ai_response
 import threading
 
 def main():
@@ -33,22 +34,30 @@ def main():
                     app.quit()
                     break
 
-                # Phân tích lệnh
-                parsed_command = parse_command(command)
-                intent = parsed_command.get("intent")
-                details = parsed_command.get("details")
+                # Phân tích lệnh bằng AI
+                print(f"Đang gửi lệnh '{command}' đến AI để phân tích...")
+                ai_result = get_ai_response(command)
+                intent = ai_result.get("intent")
+                entities = ai_result.get("entities", {})
 
                 if intent == "play_music":
-                    if details:
-                        print(f"Đã hiểu ý định: Phát nhạc. Chi tiết: '{details}'")
-                        play_youtube_video(details)
+                    # Xây dựng truy vấn tìm kiếm từ các thực thể AI trích xuất được
+                    search_query = " ".join(entities.values())
+                    if search_query:
+                        print(f"AI đã hiểu ý định: Phát nhạc. Truy vấn: '{search_query}'")
+                        play_youtube_video(search_query)
                     else:
-                        print("Bạn muốn nghe nhạc gì? Vui lòng nói rõ hơn.")
+                        print("AI không thể xác định bạn muốn nghe gì. Vui lòng thử lại.")
+
                 elif intent == "connect_bluetooth":
-                    print(f"Đã hiểu ý định: Kết nối Bluetooth.")
+                    print(f"AI đã hiểu ý định: Kết nối Bluetooth.")
                     connect_to_nearest_speaker()
-                else:
-                    print(f"Xin lỗi, tôi chưa hiểu lệnh: '{command}'")
+
+                elif intent == "error":
+                    print(f"Lỗi từ Lõi AI: {ai_result.get('details')}")
+
+                else: # intent == "unknown"
+                    print(f"AI không thể xác định ý định cho lệnh: '{command}'")
 
             except Exception as e:
                 print(f"Đã xảy ra lỗi trong vòng lặp lệnh: {e}")
