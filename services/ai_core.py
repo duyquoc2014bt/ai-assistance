@@ -20,7 +20,7 @@ def get_ai_response(user_command: str) -> dict:
             return {"intent": "error", "details": "API key not configured."}
 
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
         # Đây là "prompt" - hướng dẫn cho AI biết phải làm gì.
         # Chúng ta yêu cầu nó hoạt động như một bộ phân tích lệnh và trả về JSON.
